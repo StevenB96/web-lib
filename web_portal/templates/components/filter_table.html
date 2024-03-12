@@ -1,0 +1,112 @@
+{% load custom_tags %}
+
+{% if filters %}
+<style>
+    .search-form {
+        padding: 20px;
+        margin: 20px;
+        border-radius: 20px;
+        min-width: 300px;
+        {% if filter_direction == 'column' %}
+            width: 30%;
+        {% else %}
+            width: 100%;
+        {% endif %}
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+        gap: 10px;
+        border: solid;
+        border-width: 0.5em;
+        background-color: #DDA16F;
+        border-color: #441704;
+    }
+
+    .search-form input[type="text"], .search-form input[type="number"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        font-size: medium;
+        font-weight: normal;
+        box-sizing: border-box;
+    }
+
+    .form-set {
+        {% if filter_direction == 'column' %}
+            width: 100%;
+        {% else %}
+            width: 30%;
+        {% endif %}
+    }
+
+    .form-set-container {
+        display: flex;
+        width: 100%;
+        {% if filter_direction == 'column' %}
+            flex-direction: column;
+            flex-wrap: no-wrap;
+        {% else %}
+            gap: 5%;
+            flex-direction: row;
+            flex-wrap: wrap;
+        {% endif %}
+    }
+
+    #sort {
+        display: none;
+    }
+
+    .search-form button[type="submit"] {
+        padding: 10px 20px;
+        background-color: #B16A2A;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: medium;
+        font-weight: normal;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        box-sizing: border-box;
+    }
+
+    .search-form button[type="submit"]:hover {
+        background-color: #441704;
+    }
+</style>
+
+<form
+    class="search-form"
+    action=""
+    method="GET"
+>
+    {% csrf_token %}
+    <h1>Filters</h1>
+    <div class="form-set-container">
+        {% for filter in filters %}
+        <div class="form-set">
+            <label for="{{ filter.name }}_filter">
+                <h2>{{ filter.label }}:</h2>
+            </label>
+            <input
+                type="{{ filter.type }}"
+                id="{{ filter.name }}_filter"
+                name="{{ filter.name }}_filter"
+                value="{{ request.GET|get_filter_param:filter.name }}"
+            ><br>
+        </div>
+        {% endfor %}        
+    </div>
+    <input
+        type="text"
+        id="sort"
+        name="sort"
+        value="{{ request.GET.sort }}"
+        readonly
+    >
+    <button type="submit">Apply Filters</button>
+</form>
+{% endif %}

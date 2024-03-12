@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>{% block title %}Web Lib{% endblock %}</title>
+    <style>
+        body {
+            background-image: url("{% static 'img/bookshelves.jpeg' %}");
+            background-size: contain;
+            background-position: center;
+            background-repeat: repeat;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+<body>
+    {% block header %}{% endblock %}
+
+    <div class="content">
+        {% block content %}
+        <!-- Default content -->
+        {% endblock %}
+    </div>
+
+    <footer>
+        <!-- Footer content -->
+    </footer>
+</body>
+{% block script %}
+<!-- Default script -->
+{% endblock %}
+</html>

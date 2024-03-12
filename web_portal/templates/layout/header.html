@@ -1,0 +1,64 @@
+<style>
+	.header-container {
+		position: relative;
+		color: #D8CEC2;
+		background-color: #441704;
+		padding: 0;
+		margin: 0;
+		height: 10vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-bottom: solid;
+		border-width: 0.5em;
+		border-color: black;
+	}
+
+	.header-container a {
+		text-decoration: none;
+	}
+
+	.logout_button,
+	.return_button {
+		padding: 10px 20px;
+		background-color: #B16A2A;
+		color: white;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		font-size: large;
+		font-weight: bolder;
+		margin-top: 0.5em;
+		margin-bottom: 0.5em;
+		box-sizing: border-box;
+		position: absolute;
+		top: 20px;
+		border: 0.25em solid #ddd;
+		box-sizing: border-box;
+	}
+
+	.logout_button {
+		right: 20px;
+	}
+
+	.return_button {
+		left: 20px;
+	}
+
+	.logout_button:hover,
+	.return_button:hover {
+		background-color: #441704;
+	}
+</style>
+
+<div class="header-container">
+	<h1>{{ header_title|default:"Default" }}</h1>
+	<a
+		href="/logout"
+		class="logout_button"
+	>Logout</a>
+	{% if navigate_text %}<a
+		href="{% if navigate_link %}{{ navigate_link }}{% else %}#{% endif %}"
+		class="return_button"
+	>{% if navigate_text %}{{ navigate_text }}{% endif %}</a>{% endif %}
+</div>

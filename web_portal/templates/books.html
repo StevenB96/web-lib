@@ -1,0 +1,50 @@
+{% extends 'layout/main.html' %}
+
+{% block header %}
+{% include 'layout/header.html' with header_title="Reading List" navigate_text="Home" navigate_link="/home" %}
+{% endblock header %}
+
+{% block content %}
+<style>
+    .book-table th,
+    .book-table td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .book-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .book-table {
+        width: 100%;
+        background-color: white;
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    .book-data-container {
+        box-sizing: border-box;
+        width: 100%;
+        border: solid;
+        border-width: 0.5em;
+        padding: 20px;
+        margin: 20px;
+        border-radius: 20px;
+        background-color: #DDA16F;
+        border-color: #441704;
+    }
+</style>
+
+<div class="book-container">
+    {% include 'components/filter_table.html' %}
+    {% load django_tables2 %}
+    <div class="book-data-container">
+        <h2>Books:</h2>
+        {% render_table table %}
+    </div>
+</div>
+{% endblock %}
