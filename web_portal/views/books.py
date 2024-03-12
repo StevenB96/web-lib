@@ -3,7 +3,7 @@ from django.utils.html import format_html
 import django_tables2 as tables
 from django.db.models import Value, IntegerField, Value, OuterRef, Exists, F
 from django.shortcuts import render, redirect
-from django.contrib.auth.mixins import LoginRequiredMixin
+from ..helpers import CustomLoginRequiredMixin
 from custom_admin.model_classes import (
     ReadingList,
     Book,
@@ -57,7 +57,7 @@ class BookTable(tables.Table):
             return value
 
 
-class BooksView(LoginRequiredMixin, View):
+class BooksView(CustomLoginRequiredMixin, View):
     def get_queryset(self, reading_list_id):
         queryset = Book.objects.all()
 

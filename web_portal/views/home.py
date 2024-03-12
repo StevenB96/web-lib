@@ -1,7 +1,7 @@
 from django.views import View
 import django_tables2 as tables
 from django.shortcuts import render, redirect
-from django.contrib.auth.mixins import LoginRequiredMixin
+from ..helpers import CustomLoginRequiredMixin
 from custom_admin.model_classes import (
     ReadingList,
     BaseModel,
@@ -41,7 +41,7 @@ class HomeTable(tables.Table):
         return book_names
 
 
-class HomeView(LoginRequiredMixin, View):
+class HomeView(CustomLoginRequiredMixin, View):
     def get_queryset(self):
         logged_in_user = self.request.user
         queryset = ReadingList.objects.filter(user=logged_in_user)
@@ -103,7 +103,7 @@ class HomeView(LoginRequiredMixin, View):
             return redirect(redirect_url)
 
 
-class ReadingListBooksView(LoginRequiredMixin, View):
+class ReadingListBooksView(CustomLoginRequiredMixin, View):
     def get(self, request, reading_list_id, book_id, operation):
         if (operation == 'toggle'):
             reading_list = ReadingList.objects.get(id=reading_list_id)
