@@ -1,7 +1,5 @@
 # Livi assessment setup README
 
-## Note: As of 9am on 12/03/2024 I have not developed / tested the Dockerfile. This is in part due to me working on a windows laptop which does not support virtualistation.
-
 ## Initiate a Virtual Environment
 
 ### Create a virtual environment using the following command:

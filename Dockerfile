@@ -22,7 +22,6 @@ COPY . /app/
 
 # Expose ports
 EXPOSE 80
-EXPOSE 8000
 
 # Run migrations and seeding
 RUN python manage.py makemigrations && \
@@ -34,4 +33,7 @@ RUN python manage.py makemigrations && \
     python manage.py collectstatic --noinput
 
 # Start NGINX and Django
-CMD service nginx start && gunicorn livi_assessment.wsgi:application --bind 127.0.0.1:8000
+CMD service nginx start && \
+    gunicorn livi_assessment.wsgi:application \
+    --bind 0.0.0.0:30000
+

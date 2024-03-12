@@ -39,8 +39,13 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = os.getenv('DJANGO_DEBUG') == 'True'
 
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS').split(',')
-
-
+CSRF_TRUSTED_ORIGINS = os.getenv('DJANGO_CSRF_TRUSTED_ORIGINS').split(',')
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+print(
+    ALLOWED_HOSTS,
+    CSRF_TRUSTED_ORIGINS,
+)
 # Application definition
 
 INSTALLED_APPS = [
