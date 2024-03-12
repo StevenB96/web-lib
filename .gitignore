@@ -33,4 +33,5 @@ venv*/
 # Windows
 Thumbs.db
 
-# static/
+# Static files
+static/
