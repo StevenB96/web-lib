@@ -12,14 +12,23 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 
-# Load environment variables from .env file
-load_dotenv()
+# Function to load variables from .env file if it exists
+def load_env():
+    if os.path.exists(".env"):
+        # Load variables from .env file into a dictionary
+        env_values = dotenv_values(".env")
 
-# Check if .env is loaded
-if not load_dotenv():
-    raise RuntimeError("Failed to load .env file")
+        # Iterate over the dictionary and set each variable in the environment
+        for key, value in env_values.items():
+            if key not in os.environ:
+                os.environ[key] = value
+    else:
+        print(".env file does not exist. Environment variables not loaded.")
+
+# Call the function to load environment variables
+load_env()
 
 # Logging
 LOG_LEVEL = os.getenv('DJANGO_LOG_LEVEL')
