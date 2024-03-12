@@ -29,6 +29,10 @@
 
 ## Run Server
 
+### Run tests:
+
+- python manage.py test
+
 ### Start the Django development server:
 
 - python manage.py runserver
