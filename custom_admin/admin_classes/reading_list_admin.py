@@ -58,11 +58,28 @@ class ReadingListAdminForm(forms.ModelForm):
 
 class ReadingListAdmin(BaseAdmin):
     form = ReadingListAdminForm
+
+    search_fields = [
+        "name",
+    ]
+
     fields = (
         'user',
         'books_form_field',
         'name',
         'status',
+    )
+
+    list_display = [
+        'name',
+        'user',
+        'status',
+    ]
+
+    ordering = (
+        'name',
+        'user',
+        'status'
     )
 
 

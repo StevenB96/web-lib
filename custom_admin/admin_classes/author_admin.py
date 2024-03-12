@@ -7,7 +7,21 @@ from ..model_classes import (
 
 
 class AuthorAdmin(BaseAdmin):
+    search_fields  = [
+        'name',
+    ]
+
+    list_display  = [
+        "name",
+        'status',
+    ]
+    
     fields = (
+        'name',
+        'status',
+    )
+
+    ordering = (
         'name',
         'status',
     )

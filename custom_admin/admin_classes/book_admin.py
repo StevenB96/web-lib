@@ -56,11 +56,31 @@ class BookAdmin(BaseAdmin):
     # Use the custom form
     form = BookAdminForm
 
+    search_fields = (
+        'title',
+    )
+
+    list_display  = [
+        'title',
+        'author',
+        'rating',
+        'published_date',
+        'status',
+    ]
+    
     fields = (
         'author',
         'genres_form_field',
         'title',
         'description',
+        'rating',
+        'published_date',
+        'status',
+    )
+
+    ordering = (
+        'title',
+        'author',
         'rating',
         'published_date',
         'status',
