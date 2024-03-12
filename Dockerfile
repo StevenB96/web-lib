@@ -7,17 +7,21 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y nginx \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt gunicorn
 
+# Copy NGINX configuration
+COPY nginx.conf /etc/nginx/sites-available/default
+
 # Copy application code
 COPY . /app/
 
-# Expose port 8000
+# Expose ports
+EXPOSE 80
 EXPOSE 8000
 
 # Run migrations and seeding
@@ -29,5 +33,5 @@ RUN python manage.py makemigrations && \
     python manage.py test && \
     python manage.py collectstatic --noinput
 
-# Run the Django application with Gunicorn
-CMD gunicorn livi_assessment.wsgi:application --bind 0.0.0.0:8000
+# Start NGINX and Django
+CMD service nginx start && gunicorn livi_assessment.wsgi:application --bind 127.0.0.1:8000

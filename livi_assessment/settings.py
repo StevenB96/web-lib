@@ -11,27 +11,19 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-import logging
+import os
+from dotenv import load_dotenv
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         # Define a console handler to output logs to the console
-#         'console': {
-#             'level': 'DEBUG',  # Set the log level to DEBUG
-#             'class': 'logging.StreamHandler',  # Use a StreamHandler to output logs to the console
-#         },
-#     },
-#     'loggers': {
-#         # Configure the root logger
-#         '': {
-#             'handlers': ['console'],  # Use the console handler for all log messages
-#             'level': 'DEBUG',  # Set the log level to DEBUG
-#             'propagate': True,
-#         },
-#     },
-# }
+# Load environment variables from .env file
+load_dotenv()
+
+# Check if .env is loaded
+if not load_dotenv():
+    raise RuntimeError("Failed to load .env file")
+
+# Logging
+LOG_LEVEL = os.getenv('DJANGO_LOG_LEVEL')
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,12 +33,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-mb5fhy@)xnxweseu-3u*+^zo6$*(c=k964=5b)8dum0w2cpj*)'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS').split(',')
 
 
 # Application definition
@@ -81,7 +73,7 @@ ROOT_URLCONF = 'livi_assessment.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -100,13 +92,24 @@ WSGI_APPLICATION = 'livi_assessment.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if os.getenv('DATABASE_ENGINE') == 'mysql':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.getenv('MYSQL_DB_NAME'),
+            'USER': os.getenv('MYSQL_DB_USER'),
+            'PASSWORD': os.getenv('MYSQL_DB_PASSWORD'),
+            'HOST': os.getenv('MYSQL_DB_HOST'),
+            'PORT': os.getenv('MYSQL_DB_PORT'),
+        }
     }
-}
-
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, os.getenv('SQLITE_DB_PATH')),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -143,10 +146,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
-ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
-STATIC_ROOT = BASE_DIR / 'static/'
+ADMIN_MEDIA_PREFIX = 'admin/'
+STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = [
-    BASE_DIR / 'assets/',
+    BASE_DIR / 'static_app_common/',
+    BASE_DIR / 'custom_admin' / 'static',
 ]
 
 # Default primary key field type
