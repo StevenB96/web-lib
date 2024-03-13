@@ -104,15 +104,15 @@ WSGI_APPLICATION = 'livi_assessment.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-if os.getenv('DATABASE_ENGINE') == 'mysql':
+if os.getenv('DB_ENGINE') == 'mysql':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.getenv('MYSQL_DB_NAME'),
-            'USER': os.getenv('MYSQL_DB_USER'),
-            'PASSWORD': os.getenv('MYSQL_DB_PASSWORD'),
-            'HOST': os.getenv('MYSQL_DB_HOST'),
-            'PORT': os.getenv('MYSQL_DB_PORT'),
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST'),
+            'PORT': os.getenv('DB_PORT'),
         }
     }
 else:
@@ -161,8 +161,9 @@ STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = 'admin/'
 STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static_app_common/',
+    BASE_DIR / 'static_common/',
     BASE_DIR / 'custom_admin' / 'static',
+    BASE_DIR / 'web_portal' / 'static',
 ]
 
 # Default primary key field type

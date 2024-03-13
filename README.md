@@ -42,3 +42,13 @@
 - Username: admin_user
 - Email address: admin_user@example.com
 - Password: adminpass
+
+## Deployment
+
+### Docker
+
+- docker build -t web-lib .
+- docker tag web-lib [x]/web-lib:v[y].[z]
+- docker push [x]/web-lib:v[y].[z]
+
+### k8s

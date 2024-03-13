@@ -21,7 +21,7 @@ COPY nginx.conf /etc/nginx/sites-available/default
 COPY . /app/
 
 # Expose ports
-EXPOSE 80
+EXPOSE 8000
 
 # Run migrations and seeding
 RUN python manage.py makemigrations && \
@@ -29,11 +29,10 @@ RUN python manage.py makemigrations && \
     python manage.py seed_permissions && \
     python manage.py seed_users && \
     python manage.py seed_books && \
+    python manage.py collectstatic --noinput & \    
     python manage.py test && \
-    python manage.py collectstatic --noinput
+    chmod +x entrypoint.sh
 
-# Start NGINX and Django
-CMD service nginx start && \
-    gunicorn livi_assessment.wsgi:application \
-    --bind 0.0.0.0:30000
+# Run application
+CMD ["./entrypoint.sh"]
 

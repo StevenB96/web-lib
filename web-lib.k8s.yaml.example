@@ -1,0 +1,191 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-lib-configmap
+data:
+  db-engine: mysql
+  db-host: YOUR_MYSQL_DB_SERVICE_NAME
+  db-name: web-lib
+  debug: "False"
+  log-level: DEBUG
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: web-lib-secret
+type: Opaque
+data:
+  secret-key: 'YOUR_DJANGO_SECRET_KEY'
+  allowed-hosts: YOUR_ALLOWED_HOSTS_COMMA_SEPARATED
+  csrf-trusted-origins: YOUR_CSRF_TRUSTED_ORIGINS_COMMA_SEPARATED
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secret
+type: Opaque
+data:
+  db-user: YOUR_MYSQL_USERNAME
+  db-password: YOUR_MYSQL_PASSWORD
+  db-host: localhost
+  db-port: YOUR_MYSQL_PORT_ENCODED
+---
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: web-lib-deployment
+  labels:
+    app: web-lib-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-lib-app
+  template:
+    metadata:
+      labels:
+        app: web-lib-app
+    spec:
+      containers:
+      - name: web-lib-app
+        image: YOUR_WEB_APP_IMAGE
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DJANGO_SECRET_KEY
+          valueFrom: 
+            secretKeyRef:
+              name: web-lib-secret
+              key: secret-key
+        - name: DJANGO_DEBUG
+          valueFrom: 
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: debug
+        - name: DJANGO_ALLOWED_HOSTS
+          valueFrom: 
+            secretKeyRef:
+              name: web-lib-secret
+              key: allowed-hosts
+        - name: DJANGO_CSRF_TRUSTED_ORIGINS
+          valueFrom: 
+            secretKeyRef:
+              name: web-lib-secret
+              key: csrf-trusted-origins
+        - name: DJANGO_LOG_LEVEL
+          valueFrom: 
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: log-level
+
+        - name: DB_ENGINE
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: db-engine
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: db-name
+        - name: DB_USER
+          valueFrom: 
+            secretKeyRef:
+              name: mysql-secret
+              key: db-user
+        - name: DB_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: mysql-secret
+              key: db-password
+        - name: DB_HOST
+          valueFrom: 
+            secretKeyRef:
+              name: mysql-secret
+              key: db-host
+        - name: DB_PORT
+          valueFrom: 
+            secretKeyRef:
+              name: mysql-secret
+              key: db-port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-lib-service
+spec:
+  selector:
+    app: web-lib-app
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+      nodePort: YOUR_NODE_PORT
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-db-secret
+type: Opaque
+data:
+  db-user: YOUR_MYSQL_USERNAME
+  db-password: YOUR_MYSQL_PASSWORD
+  db-host: localhost
+  db-port: YOUR_MYSQL_PORT_ENCODED
+---
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: mysql-db-deployment
+  labels:
+    app: mysql-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-db
+  template:
+    metadata:
+      labels:
+        app: mysql-db
+    spec:
+      containers:
+      - name: mysql-db
+        image: mysql
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-db-secret
+              key: db-user
+        - name: MYSQL_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: mysql-db-secret
+              key: db-password
+        - name: MYSQL_HOST
+          valueFrom: 
+            secretKeyRef:
+              name: mysql-db-secret
+              key: db-host
+        - name: MYSQL_TCP_PORT
+          valueFrom:
+            secretKeyRef:
+              name: mysql-db-secret
+              key: db-port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-db-service
+spec:
+  selector:
+    app: mysql-db
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
