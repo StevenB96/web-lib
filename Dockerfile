@@ -35,8 +35,7 @@ RUN python manage.py makemigrations && \
     python manage.py seed_books && \
     python manage.py collectstatic --noinput & \    
     python manage.py test && \
-    chmod +x ./shell_scripts/entrypoint_docker.sh && \
-    chmod +x ./shell_scripts/entrypoint_docker.sh
+    chmod +x ./shell_scripts/*
 
 # Run application
 CMD ["./shell_scripts/entrypoint_docker.sh"]
