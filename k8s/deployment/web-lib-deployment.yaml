@@ -1,0 +1,140 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-lib-deployment
+  labels:
+    app: web-lib-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-lib-app
+  template:
+    metadata:
+      labels:
+        app: web-lib-app
+    spec:
+      initContainers:
+      - name: db-setup
+        image: stevenb1996/web-lib:v1.4
+        command: ["./shell_scripts/build_docker.sh"]
+        ports:
+        - containerPort: 8003
+        env:
+        - name: DJANGO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: web-lib-secret
+              key: secret-key
+        - name: DJANGO_DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: debug
+        - name: DJANGO_ALLOWED_HOSTS
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: allowed-hosts
+        - name: DJANGO_CSRF_TRUSTED_ORIGINS
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: csrf-trusted-origins
+        - name: DJANGO_LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: log-level
+        - name: DB_ENGINE
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: db-engine
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: db-name
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-db-secret
+              key: db-user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-db-secret
+              key: db-password
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: db-host
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-db-configmap
+              key: db-port
+
+      containers:
+      - name: web-lib-app
+        image: stevenb1996/web-lib:v1.4
+        ports:
+        - containerPort: 8001
+        env:
+        - name: DJANGO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: web-lib-secret
+              key: secret-key
+        - name: DJANGO_DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: debug
+        - name: DJANGO_ALLOWED_HOSTS
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: allowed-hosts
+        - name: DJANGO_CSRF_TRUSTED_ORIGINS
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: csrf-trusted-origins
+        - name: DJANGO_LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: log-level
+        - name: DB_ENGINE
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: db-engine
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: db-name
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-db-secret
+              key: db-user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-db-secret
+              key: db-password
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: db-host
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-db-configmap
+              key: db-port

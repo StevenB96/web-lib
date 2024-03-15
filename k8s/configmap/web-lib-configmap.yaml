@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-lib-configmap
+data:
+  allowed-hosts: localhost,127.0.0.1
+  csrf-trusted-origins: http://localhost:8001,http://127.0.0.1:8001
+  db-engine: mysql
+  db-host: mysql-db-service
+  db-name: web-lib
+  debug: "False"
+  log-level: DEBUG
