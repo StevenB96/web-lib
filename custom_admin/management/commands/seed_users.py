@@ -45,21 +45,28 @@ class Command(BaseCommand):
             user_data = {key: value for key,
                          value in user.items() if key in user_model_fields}
             username = user_data["username"]
-            if not CustomUser.objects.filter(username=username).exists():
-                user_record = CustomUser.objects.create_user(**user_data)
+            email = user_data["email"]
+            user_data.pop('username', None)
+            user_data.pop('email', None)
+            user_record, created = CustomUser.objects.get_or_create(
+                username=username,
+                email=email,
+                defaults={**user_data},
+            )
+
+            if created:
                 if user_record:
                     self.stdout.write(self.style.SUCCESS(
-                        f"User ({username}) created"))
+                        f"User {username} created"))
 
                     # -------------------------- User auth groups
                     if 'auth_group_list' in user:
                         for auth_group in user['auth_group_list']:
                             if not user_record.groups.filter(id=auth_group.id).exists():
                                 user_record.groups.add(auth_group)
-                else:
-                    self.stdout.write(self.style.WARNING(
-                        f"User ({username}) creation failed"))
 
+                self.stdout.write(self.style.SUCCESS(
+                    f"User {username} created"))
             else:
                 self.stdout.write(self.style.WARNING(
-                    f"User ({username}) already exists"))
+                    f"User {username} already exists"))

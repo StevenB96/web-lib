@@ -60,24 +60,41 @@ class Command(BaseCommand):
             genre = row['genre']
             summary = row['summary']
 
+            # -------------------------- Genres
             genre_record, created = Genre.objects.get_or_create(
                 name=genre,
-                status=BaseModel.STATUS_CHOICES[1][0],
+                defaults={
+                    'status': BaseModel.STATUS_CHOICES[1][0]
+                },
             )
+
+            # -------------------------- Authors
             author_record, created = Author.objects.get_or_create(
                 name=author,
-                status=BaseModel.STATUS_CHOICES[1][0],
+                defaults={
+                    'status': BaseModel.STATUS_CHOICES[1][0]
+                },
             )
+
+            # -------------------------- Books
             book_record, created = Book.objects.get_or_create(
-                author=author_record,
                 title=title,
-                description=summary,
-                rating=average_rating,
-                published_date=self.convert_year_to_datetime(
-                    original_publication_year),
-                status=BaseModel.STATUS_CHOICES[1][0],
+                defaults={
+                    'author': author_record,
+                    'description': summary,
+                    'rating': average_rating,
+                    'published_date': self.convert_year_to_datetime(
+                        original_publication_year),
+                    'status': BaseModel.STATUS_CHOICES[1][0],                    
+                },
             )
-            book_record.genres.add(genre_record)
+            if (created):
+                book_record.genres.add(genre_record)
+                self.stdout.write(self.style.SUCCESS(
+                    f"Book {title} created"))
+            else:
+                self.stdout.write(self.style.WARNING(
+                    f"Book {title} already exists"))
 
     def convert_year_to_datetime(self, year):
         dt = datetime(int(year), 1, 1, 0, 0, 0)
