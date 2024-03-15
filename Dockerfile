@@ -21,7 +21,7 @@ COPY nginx.conf /etc/nginx/sites-available/default
 COPY . /app/
 
 # Expose ports
-EXPOSE 8000
+EXPOSE 8001
 
 # Run migrations and seeding
 RUN python manage.py makemigrations && \

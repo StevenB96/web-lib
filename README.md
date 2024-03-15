@@ -52,3 +52,13 @@
 - docker push [x]/web-lib:v[y].[z]
 
 ### k8s
+
+- minikube start
+- kubectl apply -f web-lib.k8s.yaml
+- minikube tunnel
+- kubectl get pod
+- kubectl logs [x] -c [y]
+- kubectl get service
+- kubectl get secret
+- kubectl get all
+- kubectl delete -f web-lib.k8s.yaml
