@@ -58,6 +58,7 @@
 - minikube tunnel
 - kubectl get pod
 - kubectl logs [x] -c [y]
+- kubectl exec -it [pod]-- bash
 - kubectl get service
 - kubectl get secret
 - kubectl get all

@@ -21,20 +21,20 @@ type: Opaque
 ---
 apiVersion: v1
 data:
-  db-host: localhost
+  db-host: mysql-db-service
   db-port: "3306"
 kind: ConfigMap
 metadata:
-  name: mysql-configmap
+  name: mysql-db-configmap
 ---
 apiVersion: v1
 data:
-  db-password: 8e047B%a!9fd2b^
-  db-user: web-lib-user
-  db-root-password: G#rE4$1LzA@9x^
+  db-password: OGUwNDdCJWEhOWZkMmJe
+  db-user: d2ViLWxpYi11c2Vy
+  db-root-password: RyNyRTRAOXhe
 kind: Secret
 metadata:
-  name: mysql-secret
+  name: mysql-db-secret
 type: Opaque
 ---
 apiVersion: apps/v1
@@ -53,9 +53,72 @@ spec:
       labels:
         app: web-lib-app
     spec:
+      initContainers:
+      - name: db-setup
+        image: stevenb1996/web-lib:v1.4
+        command: ["./entrypoint_docker.sh"]
+        ports:
+        - containerPort: 8003
+        env:
+        - name: DJANGO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: web-lib-secret
+              key: secret-key
+        - name: DJANGO_DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: debug
+        - name: DJANGO_ALLOWED_HOSTS
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: allowed-hosts
+        - name: DJANGO_CSRF_TRUSTED_ORIGINS
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: csrf-trusted-origins
+        - name: DJANGO_LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: log-level
+        - name: DB_ENGINE
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: db-engine
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: db-name
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-db-secret
+              key: db-user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-db-secret
+              key: db-password
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: web-lib-configmap
+              key: db-host
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-db-configmap
+              key: db-port
+
       containers:
       - name: web-lib-app
-        image: stevenb1996/web-lib:v1.2
+        image: stevenb1996/web-lib:v1.4
         ports:
         - containerPort: 8001
         env:
@@ -84,7 +147,6 @@ spec:
             configMapKeyRef:
               name: web-lib-configmap
               key: log-level
-
         - name: DB_ENGINE
           valueFrom:
             configMapKeyRef:
@@ -98,22 +160,22 @@ spec:
         - name: DB_USER
           valueFrom:
             secretKeyRef:
-              name: mysql-secret
+              name: mysql-db-secret
               key: db-user
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mysql-secret
+              name: mysql-db-secret
               key: db-password
         - name: DB_HOST
           valueFrom:
             configMapKeyRef:
-              name: mysql-configmap
+              name: web-lib-configmap
               key: db-host
         - name: DB_PORT
           valueFrom:
             configMapKeyRef:
-              name: mysql-configmap
+              name: mysql-db-configmap
               key: db-port
 ---
 apiVersion: v1
@@ -155,13 +217,18 @@ spec:
         - name: MYSQL_USER
           valueFrom:
             secretKeyRef:
-              name: mysql-secret
+              name: mysql-db-secret
               key: db-user
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mysql-secret
+              name: mysql-db-secret
               key: db-password
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-db-secret
+              key: db-root-password
         - name: MYSQL_HOST
           valueFrom:
             configMapKeyRef:

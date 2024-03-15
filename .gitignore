@@ -40,4 +40,4 @@ static/
 */migrations/*
 
 # K8s configuration
-*k8s.yaml
+k8s/
