@@ -55,18 +55,15 @@ spec:
         - name: DB_NAME
           valueFrom:
             configMapKeyRef:
-              name: web-lib-configmap
+              name: mysql-db-configmap
               key: db-name
         - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: mysql-db-secret
-              key: db-user
+          value: root
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mysql-db-secret
-              key: db-password
+              key: db-root-password
         - name: DB_HOST
           valueFrom:
             configMapKeyRef:
@@ -117,18 +114,15 @@ spec:
         - name: DB_NAME
           valueFrom:
             configMapKeyRef:
-              name: web-lib-configmap
+              name: mysql-db-configmap
               key: db-name
         - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: mysql-db-secret
-              key: db-user
+          value: root
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mysql-db-secret
-              key: db-password
+              key: db-root-password
         - name: DB_HOST
           valueFrom:
             configMapKeyRef:

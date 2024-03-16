@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: mysql-db
-        image: mysql
+        image: mysql:latest
         ports:
         - containerPort: 3306
         env:
@@ -45,4 +45,9 @@ spec:
             configMapKeyRef:
               name: mysql-db-configmap
               key: db-port
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-db-configmap
+              key: db-name
 
