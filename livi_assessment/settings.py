@@ -19,9 +19,9 @@ from dotenv import dotenv_values
 
 def load_env():
     try:
-        if os.path.exists(".env"):
+        if os.path.exists("../.env"):
             # Load variables from .env file into a dictionary
-            env_values = dotenv_values(".env")
+            env_values = dotenv_values("../.env")
 
             # Iterate over the dictionary and set each variable in the environment
             for key, value in env_values.items():
