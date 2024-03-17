@@ -10,13 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-import logging
 from pathlib import Path
 import os
 from dotenv import dotenv_values
-
-# Configure logging
-logging.basicConfig(filename='env_loading_log.txt', level=logging.ERROR)
 
 # Function to load variables from .env file if it exists
 def load_env():
@@ -30,16 +26,15 @@ def load_env():
                 if key not in os.environ:
                     os.environ[key] = value
         else:
-            logging.warning(".env file does not exist. Environment variables not loaded.")
+            print(".env file does not exist. Environment variables not loaded.")
     except Exception as e:
-        logging.error(f"Error loading .env file: {e}")
+        print(f"Error loading .env file: {e}")
 
 # Call the function to load environment variables
 load_env()
 
 # Logging
 LOG_LEVEL = os.getenv('DJANGO_LOG_LEVEL')
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
