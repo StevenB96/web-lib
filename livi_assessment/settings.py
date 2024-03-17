@@ -15,6 +15,8 @@ import os
 from dotenv import dotenv_values
 
 # Function to load variables from .env file if it exists
+
+
 def load_env():
     try:
         if os.path.exists(".env"):
@@ -30,6 +32,7 @@ def load_env():
     except Exception as e:
         print(f"Error loading .env file: {e}")
 
+
 # Call the function to load environment variables
 load_env()
 
@@ -44,7 +47,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY',
+                       ')on94-l&m%v5ph84za$z&z53@tf&(_m!c8m3y7bync#h&mnc5t')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() == 'true'
@@ -73,7 +78,7 @@ INSTALLED_APPS = [
     'django_tables2',
     'custom_admin',
     'web_portal',
-    'django_select2',    
+    'django_select2',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
