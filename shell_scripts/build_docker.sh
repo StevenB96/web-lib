@@ -19,7 +19,7 @@ function log_error {
 echo "Starting database initialization..."
 
 # Check if the database engine is not SQLite
-if [ "$DB_ENGINE" != "sqlite" ]; then
+if [ $DB_ENGINE != "sqlite" ]; then
     until nc -z $DB_HOST $DB_PORT; do
         if (( $(elapsed_time) >= TIMEOUT )); then
             log_error "Timeout reached while waiting for database service."
@@ -28,9 +28,8 @@ if [ "$DB_ENGINE" != "sqlite" ]; then
         echo "Database service is not available yet. Retrying in 5 seconds..."
         sleep 5
     done
+    echo "MySQL service is available. Starting database initialization..."
 fi
-
-echo "MySQL service is available. Starting database initialization..."
 
 # Run 'makemigrations'
 echo "Running 'makemigrations'..."
