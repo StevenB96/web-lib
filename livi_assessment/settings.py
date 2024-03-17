@@ -14,14 +14,15 @@ from pathlib import Path
 import os
 from dotenv import dotenv_values
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 # Function to load variables from .env file if it exists
-
-
 def load_env():
     try:
-        if os.path.exists("../.env"):
+        if os.path.exists(os.path.join(BASE_DIR, ".env")):
             # Load variables from .env file into a dictionary
-            env_values = dotenv_values("../.env")
+            env_values = dotenv_values(os.path.join(BASE_DIR, ".env"))
 
             # Iterate over the dictionary and set each variable in the environment
             for key, value in env_values.items():
@@ -32,16 +33,11 @@ def load_env():
     except Exception as e:
         print(f"Error loading .env file: {e}")
 
-
 # Call the function to load environment variables
 load_env()
 
 # Logging
 LOG_LEVEL = os.getenv('DJANGO_LOG_LEVEL')
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
