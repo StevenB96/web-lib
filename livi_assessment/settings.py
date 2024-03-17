@@ -47,8 +47,20 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG') == 'True'
 
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS').split(',')
-CSRF_TRUSTED_ORIGINS = os.getenv('DJANGO_CSRF_TRUSTED_ORIGINS').split(',')
+# Get environment variables
+allowed_hosts_env = os.getenv('DJANGO_ALLOWED_HOSTS')
+csrf_trusted_origins_env = os.getenv('DJANGO_CSRF_TRUSTED_ORIGINS')
+
+# Check if environment variables are not None and contain ","
+if allowed_hosts_env and "," in allowed_hosts_env:
+    ALLOWED_HOSTS = allowed_hosts_env.split(',')
+else:
+    ALLOWED_HOSTS = []
+
+if csrf_trusted_origins_env and "," in csrf_trusted_origins_env:
+    CSRF_TRUSTED_ORIGINS = csrf_trusted_origins_env.split(',')
+else:
+    CSRF_TRUSTED_ORIGINS = []
 USE_X_FORWARDED_HOST = True
 USE_X_FORWARDED_PORT = True
 
