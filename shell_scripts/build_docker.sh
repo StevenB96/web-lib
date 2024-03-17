@@ -18,14 +18,17 @@ function log_error {
 
 echo "Starting database initialization..."
 
-until nc -z $DB_HOST $DB_PORT; do
-    if (( $(elapsed_time) >= TIMEOUT )); then
-        log_error "Timeout reached while waiting for MySQL service."
-        exit 1
-    fi
-    echo "MySQL service is not available yet. Retrying in 5 seconds..."
-    sleep 5
-done
+# Check if the database engine is not SQLite
+if [ "$DB_ENGINE" != "sqlite" ]; then
+    until nc -z $DB_HOST $DB_PORT; do
+        if (( $(elapsed_time) >= TIMEOUT )); then
+            log_error "Timeout reached while waiting for database service."
+            exit 1
+        fi
+        echo "Database service is not available yet. Retrying in 5 seconds..."
+        sleep 5
+    done
+fi
 
 echo "MySQL service is available. Starting database initialization..."
 
