@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: web-lib-configmap
+  namespace: web-lib-project
 data:
   allowed-hosts: localhost,127.0.0.1
   csrf-trusted-origins: http://localhost:8001,http://127.0.0.1:8001

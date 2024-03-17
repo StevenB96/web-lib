@@ -1,3 +1,5 @@
+# Namespace
+kubectl apply -f ./k8s/namespace/web-lib-project.yaml
 # Configmap
 kubectl delete -f ./k8s/configmap/mysql-db-configmap.yaml
 kubectl delete -f ./k8s/configmap/web-lib-configmap.yaml
