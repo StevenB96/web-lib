@@ -116,6 +116,9 @@ WSGI_APPLICATION = 'livi_assessment.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# Get the SQLite database path from the environment variable or use a default value
+sqlite_db_path = os.getenv('SQLITE_DB_PATH', 'db.sqlite3')
+
 if os.getenv('DB_ENGINE') == 'mysql':
     DATABASES = {
         'default': {
@@ -131,7 +134,7 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, os.getenv('SQLITE_DB_PATH')),
+            'NAME': os.path.join(BASE_DIR, sqlite_db_path),
         }
     }
 
