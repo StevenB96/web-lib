@@ -17,7 +17,7 @@ spec:
       # Init
       initContainers:
       - name: db-setup
-        image: stevenb1996/web-lib:v1.5
+        image: stevenb1996/web-lib:v1.13
         command: ["./shell_scripts/build_docker.sh"]
         ports:
         - containerPort: 8003
@@ -77,7 +77,7 @@ spec:
       # Main
       containers:
       - name: web-lib-app
-        image: stevenb1996/web-lib:v1.5
+        image: stevenb1996/web-lib:v1.13
         ports:
         - containerPort: 8001
         env:

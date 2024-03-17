@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group
 from custom_admin.model_classes import (
@@ -46,6 +47,7 @@ class Command(BaseCommand):
                          value in user.items() if key in user_model_fields}
             username = user_data["username"]
             email = user_data["email"]
+            user_data["password"] = make_password(user_data["password"])
             user_data.pop('username', None)
             user_data.pop('email', None)
             user_record, created = CustomUser.objects.get_or_create(

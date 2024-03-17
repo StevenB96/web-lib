@@ -1,3 +1,4 @@
+import logging
 from django.views import View
 from django.shortcuts import render, redirect
 from django import forms
@@ -7,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.hashers import make_password
 from custom_admin.model_classes import CustomUser
 
+logger = logging.getLogger(__name__)
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=100, label="Username")
@@ -26,23 +28,30 @@ class LoginView(View):
 
     def post(self, request):
         form = LoginForm(request.POST)
+
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
+
+            # Debugging: Log the username and password being used for authentication
+            logger.debug(f"Attempting to authenticate user '{username}' with password '{password}'")
+
             user = authenticate(request, username=username, password=password)
 
-            if user:
-                login(request, user)
-                return redirect('home')
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    logger.info(f"User '{username}' logged in successfully.")
+                    return redirect('home')
+                else:
+                    logger.warning(f"Failed login attempt for inactive user '{username}'.")
+                    form.add_error('username', 'This account is inactive.')
             else:
-                form.add_error('password', 'Failed to log in.')
-                return render(request, 'login.html', {
-                    'form': form
-                })
+                logger.warning(f"Failed login attempt for unknown user '{username}'.")
+                form.add_error('password', 'Invalid username or password.')
 
-        return render(request, 'login.html', {
-            'form': form
-        })
+        logger.error(f"Form data invalid: {form.errors}")
+        return render(request, 'login.html', {'form': form})
 
 
 class RegistrationForm(forms.Form):

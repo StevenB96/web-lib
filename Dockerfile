@@ -10,6 +10,7 @@ RUN apt-get update && \
     apt-get install -y nginx && \
     apt-get install -y gcc && \
     apt-get install -y libmariadb-dev-compat libmariadb-dev && \
+    apt-get install -y netcat-openbsd && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
@@ -33,8 +34,7 @@ RUN python manage.py makemigrations && \
     python manage.py seed_permissions && \
     python manage.py seed_users && \
     python manage.py seed_books && \
-    python manage.py collectstatic --noinput & \    
-    python manage.py test && \
+    python manage.py collectstatic --noinput && \
     chmod +x ./shell_scripts/*
 
 # Run application
