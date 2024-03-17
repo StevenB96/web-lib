@@ -16,16 +16,19 @@ from dotenv import dotenv_values
 
 # Function to load variables from .env file if it exists
 def load_env():
-    if os.path.exists(".env"):
-        # Load variables from .env file into a dictionary
-        env_values = dotenv_values(".env")
+    try:
+        if os.path.exists(".env"):
+            # Load variables from .env file into a dictionary
+            env_values = dotenv_values(".env")
 
-        # Iterate over the dictionary and set each variable in the environment
-        for key, value in env_values.items():
-            if key not in os.environ:
-                os.environ[key] = value
-    else:
-        print(".env file does not exist. Environment variables not loaded.")
+            # Iterate over the dictionary and set each variable in the environment
+            for key, value in env_values.items():
+                if key not in os.environ:
+                    os.environ[key] = value
+        else:
+            print(".env file does not exist. Environment variables not loaded.")
+    except Exception as e:
+        print(f"Error loading .env file: {e}")
 
 # Call the function to load environment variables
 load_env()
