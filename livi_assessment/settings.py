@@ -16,6 +16,8 @@ from dotenv import dotenv_values
 
 # Function to load variables from .env file if it exists
 def load_env():
+    log_file = "env_loading_log.txt"  # Name of the log file
+
     try:
         if os.path.exists(".env"):
             # Load variables from .env file into a dictionary
@@ -26,9 +28,13 @@ def load_env():
                 if key not in os.environ:
                     os.environ[key] = value
         else:
-            print(".env file does not exist. Environment variables not loaded.")
+            # If .env file does not exist, log the message to the file
+            with open(log_file, "a") as f:
+                f.write(".env file does not exist. Environment variables not loaded.\n")
     except Exception as e:
-        print(f"Error loading .env file: {e}")
+        # If an error occurs during loading, log the error message to the file
+        with open(log_file, "a") as f:
+            f.write(f"Error loading .env file: {e}\n")
 
 # Call the function to load environment variables
 load_env()
