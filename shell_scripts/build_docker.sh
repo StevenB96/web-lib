@@ -19,7 +19,7 @@ function log_error {
 echo "Starting database initialization..."
 
 # Check if the database engine is not SQLite
-if [ $DB_ENGINE != "sqlite" ]; then
+if [ -n "$DB_ENGINE" ] && [ "$DB_ENGINE" != "sqlite" ]; then
     until nc -z $DB_HOST $DB_PORT; do
         if (( $(elapsed_time) >= TIMEOUT )); then
             log_error "Timeout reached while waiting for database service."
