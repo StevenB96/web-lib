@@ -48,7 +48,7 @@
 ### Docker
 
 - docker build -t web-lib .
-- docker tag web-lib [x]/web-lib:v[y].[z]
+- docker tag web-lib stevenb1996/web-lib:v[y].[z]
 - docker push [x]/web-lib:v[y].[z]
 
 ### k8s
@@ -56,10 +56,10 @@
 - minikube start
 - kubectl apply -f web-lib.k8s.yaml
 - minikube tunnel
-- kubectl get pod
+- kubectl get pod -n web-lib-project
 - kubectl logs [x] -c [y]
 - kubectl exec -it [pod]-- bash
-- kubectl get service
-- kubectl get secret
-- kubectl get all
+- kubectl get service -n web-lib-project
+- kubectl get secret -n web-lib-project
+- kubectl get all -n web-lib-project
 - kubectl delete -f web-lib.k8s.yaml
