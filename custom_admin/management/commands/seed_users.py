@@ -66,9 +66,6 @@ class Command(BaseCommand):
                         for auth_group in user['auth_group_list']:
                             if not user_record.groups.filter(id=auth_group.id).exists():
                                 user_record.groups.add(auth_group)
-
-                self.stdout.write(self.style.SUCCESS(
-                    f"User {username} created"))
             else:
                 self.stdout.write(self.style.WARNING(
                     f"User {username} already exists"))
