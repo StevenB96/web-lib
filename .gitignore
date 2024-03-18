@@ -22,7 +22,6 @@ media/
 venv/
 venv*/
 .env
-*.pem
 
 # IDE specific files
 .vscode/
@@ -42,3 +41,6 @@ static/
 
 # K8s configuration
 k8s/secret
+
+# Pem files
+*.pem
