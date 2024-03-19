@@ -11,6 +11,7 @@ RUN apt-get update && \
     apt-get install -y gcc && \
     apt-get install -y libmariadb-dev-compat libmariadb-dev && \
     apt-get install -y netcat-openbsd && \
+    apt-get install -y dos2unix && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
@@ -34,9 +35,9 @@ RUN python manage.py makemigrations && \
     python manage.py seed_permissions && \
     python manage.py seed_users && \
     python manage.py seed_books && \
-    python manage.py collectstatic --noinput
-
-RUN chmod 777 /app/shell_scripts/*
+    python manage.py collectstatic --noinput && \
+    chmod 777 /app/shell_scripts/* && \
+    find /app/shell_scripts -type f -name "*.sh" -exec dos2unix {} \;
 
 # Run application
 CMD ["/app/shell_scripts/entrypoint_docker.sh"]

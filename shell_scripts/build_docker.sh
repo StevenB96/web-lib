@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Timeout for waiting for MySQL service (in seconds)
 TIMEOUT=300

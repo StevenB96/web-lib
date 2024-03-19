@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Function to log errors
 function log_error {
